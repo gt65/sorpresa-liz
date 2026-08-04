@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Para ti Liz </title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
+
+    :root {
+      --ink-deep: #1c1220;
+      --ink-mid: #2c1b2e;
+      --plum: #3d2440;
+      --gold: #c9a15a;
+      --gold-light: #e6c98a;
+      --rose: #b8768a;
+      --rose-light: #d99bb0;
+      --cream: #f4ead9;
+      --cream-dim: #d8c9b3;
+      --paper-bg: rgba(44, 27, 46, 0.75);
+      --card-border: rgba(201, 161, 90, 0.35);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+      background: var(--ink-deep);
+      font-family: 'EB Garamond', serif;
+      color: var(--cream);
+      overflow-x: hidden;
+    }
+
+    body {
+      min-height: 100svh;
+      position: relative;
+      background:
+        radial-gradient(ellipse 70% 50% at 50% 0%, var(--plum) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 45% at 85% 90%, #4a1f3a 0%, transparent 55%),
+        radial-gradient(ellipse 60% 45% at 10% 85%, #241531 0%, transparent 55%),
+        linear-gradient(180deg, var(--ink-deep) 0%, var(--ink-mid) 55%, var(--ink-deep) 100%);
+    }
+
+    /* ---------- Partículas ambientales ---------- */
+    #embers {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .ember {
+      position: absolute;
+      border-radius: 50%;
+      background: var(--gold-light);
+      opacity: .35;
+      filter: blur(1px);
+      pointer-events: none;
+      animation: drift linear infinite;
+    }
+
+    @keyframes drift {
+      0% {
+        transform: translateY(0) translateX(0);
+        opacity: 0;
+      }
+
+      10% {
+        opacity: .45;
+      }
+
+      90% {
+        opacity: .25;
+      }
+
+      100% {
+        transform: translateY(-110vh) translateX(25px);
+        opacity: 0;
+      }
+    }
+
+    /* ---------- Partículas al clic (Corazones) ---------- */
+    .click-heart {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      font-size: 1.2rem;
+      animation: heartPop 1.2s ease-out forwards;
+      user-select: none;
+    }
+
+    @keyframes heartPop {
+      0% {
+        transform: translate(-50%, -50%) scale(0.4) rotate(0deg);
+        opacity: 1;
+      }
+
+      50% {
+        transform: translate(-50%, -100px) scale(1.2) rotate(15deg);
+        opacity: 0.9;
+      }
+
+      100% {
+        transform: translate(-50%, -160px) scale(0.8) rotate(-15deg);
+        opacity: 0;
+      }
+    }
+
+    /* ---------- Vistas ---------- */
+    .view {
+      position: relative;
+      min-height: 100svh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(1.25rem, 5vw, 3rem);
+      z-index: 2;
+    }
+
+    #inicio {
+      display: flex;
+    }
+
+    #carta {
+      display: none;
+    }
+
+    body.abierto #inicio {
+      display: none;
+    }
+
+    body.abierto #carta {
+      display: flex;
+    }
+
+    /* ---------- VISTA 1: INICIO ---------- */
+    .portada {
+      text-align: center;
+      max-width: 38rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: clamp(1.5rem, 4vw, 2.5rem);
+      animation: aparecer 1.4s ease both;
+    }
+
+    @keyframes aparecer {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .eyebrow {
+      font-family: 'EB Garamond', serif;
+      font-style: italic;
+      font-weight: 400;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      font-size: clamp(.65rem, 1.6vw, .8rem);
+      color: var(--rose);
+    }
+
+    .titulo {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 500;
+      font-size: clamp(2.6rem, 9vw, 5.2rem);
+      line-height: 1.05;
+      color: var(--cream);
+      text-shadow: 0 0 40px rgba(201, 161, 90, .25);
+    }
+
+    .titulo em {
+      font-style: italic;
+      color: var(--gold-light);
+    }
+
+    .sub {
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: var(--cream-dim);
+      max-width: 30ch;
+      line-height: 1.6;
+    }
+
+    .sello {
+      position: relative;
+      width: clamp(84px, 18vw, 108px);
+      height: clamp(84px, 18vw, 108px);
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      background:
+        radial-gradient(circle at 32% 28%, #d9b26a 0%, var(--gold) 38%, #8a5a2e 100%);
+      box-shadow:
+        0 8px 24px rgba(0, 0, 0, .55),
+        inset 0 2px 4px rgba(255, 255, 255, .35),
+        inset 0 -6px 10px rgba(0, 0, 0, .35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform .35s ease, box-shadow .35s ease;
+      margin-top: .5rem;
+    }
+
+    .sello:hover {
+      transform: scale(1.06) rotate(-3deg);
+      box-shadow:
+        0 10px 30px rgba(0, 0, 0, .6),
+        0 0 20px rgba(201, 161, 90, 0.4),
+        inset 0 2px 4px rgba(255, 255, 255, .4),
+        inset 0 -6px 10px rgba(0, 0, 0, .35);
+    }
+
+    .sello:active {
+      transform: scale(.97);
+    }
+
+    .sello svg {
+      width: 46%;
+      height: 46%;
+      fill: #3a1e12;
+      opacity: .85;
+    }
+
+    .sello-texto {
+      font-family: 'EB Garamond', serif;
+      font-style: italic;
+      font-size: clamp(.7rem, 1.6vw, .8rem);
+      color: var(--cream-dim);
+      letter-spacing: .08em;
+    }
+
+    /* ---------- VISTA 2: CARTA MEJORADA ---------- */
+    #carta.view {
+      align-items: flex-start;
+      padding-top: clamp(2.5rem, 6vh, 4.5rem);
+      padding-bottom: clamp(3.5rem, 8vh, 6rem);
+    }
+
+    /* Botón de audio flotante */
+    .audio-control {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      z-index: 100;
+      background: rgba(44, 27, 46, 0.7);
+      border: 1px solid var(--card-border);
+      color: var(--gold-light);
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .audio-control:hover {
+      background: rgba(61, 36, 64, 0.9);
+      border-color: var(--gold);
+      transform: scale(1.08);
+    }
+
+    .audio-control svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+
+    /* Tarjeta pergamino principal */
+    .carta-card {
+      position: relative;
+      width: min(92vw, 680px);
+      background: linear-gradient(145deg, #f7efe2 0%, #eae0cf 100%);
+      border: 1px solid rgba(184, 138, 75, 0.45);
+      border-radius: 16px;
+      padding: clamp(2rem, 6vw, 3.8rem);
+      box-shadow:
+        0 25px 65px rgba(0, 0, 0, 0.75),
+        inset 0 0 45px rgba(201, 161, 90, 0.15),
+        0 0 0 1px rgba(255, 255, 255, 0.4);
+      display: flex;
+      flex-direction: column;
+      gap: clamp(1.8rem, 4vw, 2.5rem);
+      margin: 0 auto;
+      animation: cartaEntrada 1.1s cubic-bezier(0.16, 1, 0.3, 1) both;
+      overflow: hidden;
+      color: #2b172a;
+    }
+
+    @keyframes cartaEntrada {
+      from {
+        opacity: 0;
+        transform: translateY(35px) scale(0.97);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Filigranas doradas en las esquinas */
+    .corner-flourish {
+      position: absolute;
+      width: 52px;
+      height: 52px;
+      pointer-events: none;
+      opacity: 0.75;
+      fill: #a8762b;
+    }
+
+    .corner-flourish.top-left {
+      top: 12px;
+      left: 12px;
+    }
+
+    .corner-flourish.top-right {
+      top: 12px;
+      right: 12px;
+      transform: scaleX(-1);
+    }
+
+    .corner-flourish.bottom-left {
+      bottom: 12px;
+      left: 12px;
+      transform: scaleY(-1);
+    }
+
+    .corner-flourish.bottom-right {
+      bottom: 12px;
+      right: 12px;
+      transform: scale(-1);
+    }
+
+    /* Encabezado */
+    .pagina-encabezado {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .6rem;
+      position: relative;
+    }
+
+    .heart-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(168, 75, 101, 0.12);
+      border: 1px solid rgba(168, 75, 101, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: .2rem;
+      box-shadow: 0 4px 12px rgba(168, 75, 101, 0.15);
+    }
+
+    .heart-badge svg {
+      width: 22px;
+      height: 22px;
+      fill: #a84b65;
+    }
+
+    .pagina-titulo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 7vw, 3.6rem);
+      font-weight: 600;
+      color: #2b172a;
+      letter-spacing: .02em;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+    }
+
+    /* Divisor ornamental */
+    .divisor-ornamental {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+      margin: .4rem 0;
+      opacity: 0.85;
+    }
+
+    .divisor-linea {
+      flex: 1;
+      max-width: 120px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #b8863b, transparent);
+    }
+
+    .divisor-diamante {
+      color: #b8863b;
+      font-size: 0.75rem;
+    }
+
+    /* Cuerpo de la carta con Letra Capitular */
+    .pagina-cuerpo {
+      width: 100%;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.2rem, 2.5vw, 1.4rem);
+      line-height: 1.85;
+      color: #362237;
+      text-align: left;
+    }
+
+    .pagina-cuerpo p {
+      margin-bottom: 1.3em;
+    }
+
+    .pagina-cuerpo p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Drop cap */
+    .drop-cap {
+      float: left;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.8rem;
+      line-height: 0.8;
+      padding-top: 4px;
+      padding-right: 10px;
+      padding-bottom: 2px;
+      font-weight: 700;
+      color: #a8762b;
+      text-shadow: 0 2px 8px rgba(168, 118, 43, 0.25);
+    }
+
+    .pagina-cuerpo strong {
+      color: #a84b65;
+      font-weight: 700;
+    }
+
+    /* Bloque de cita poética */
+    .cita-poetica {
+      position: relative;
+      margin: 0.5rem 0;
+      padding: 1.2rem 1.6rem;
+      background: rgba(201, 161, 90, 0.12);
+      border-left: 3px solid #b8863b;
+      border-radius: 0 10px 10px 0;
+      font-style: italic;
+      color: #2b172a;
+      font-size: clamp(1.15rem, 2.3vw, 1.3rem);
+      line-height: 1.6;
+    }
+
+    /* Sección de razones interactivas (Tarjetas) */
+    .razones-seccion {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      width: 100%;
+    }
+
+    .razones-titulo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.3rem, 2.8vw, 1.5rem);
+      font-weight: 600;
+      color: #8c5825;
+      text-align: center;
+      letter-spacing: .05em;
+    }
+
+    .razones-grid {
+      display: flex;
+      flex-direction: column;
+      gap: .9rem;
+      width: 100%;
+    }
+
+    .razon-card {
+      display: flex;
+      align-items: center;
+      gap: 1.1rem;
+      padding: 1rem 1.2rem;
+      background: rgba(255, 255, 255, 0.65);
+      border: 1px solid rgba(184, 138, 75, 0.28);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .razon-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3px;
+      height: 100%;
+      background: #b8863b;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .razon-card:hover {
+      background: rgba(255, 255, 255, 0.95);
+      border-color: #b8863b;
+      transform: translateX(4px) translateY(-2px);
+      box-shadow: 0 6px 20px rgba(80, 40, 60, 0.12);
+    }
+
+    .razon-card:hover::before {
+      opacity: 1;
+    }
+
+    .razon-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(168, 75, 101, 0.12);
+      border: 1px solid rgba(168, 75, 101, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: transform 0.3s ease;
+    }
+
+    .razon-card:hover .razon-icon {
+      transform: scale(1.15) rotate(10deg);
+      background: rgba(168, 75, 101, 0.2);
+      border-color: #a84b65;
+    }
+
+    .razon-icon svg {
+      width: 16px;
+      height: 16px;
+      fill: #a84b65;
+    }
+
+    .razon-texto {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.1rem, 2.2vw, 1.25rem);
+      color: #331e34;
+      line-height: 1.5;
+    }
+
+    /* Sección de firma y acción secreta */
+    .carta-footer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      margin-top: .5rem;
+    }
+
+    .firma {
+      text-align: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: clamp(1.4rem, 3.5vw, 1.7rem);
+      color: #8c5825;
+      text-shadow: none;
+    }
+
+    /* Botón Sorpresa */
+    .btn-sorpresa {
+      background: linear-gradient(135deg, #a8762b, #8c4155);
+      border: 1px solid #7a3043;
+      color: #fff8ee;
+      font-family: 'EB Garamond', serif;
+      font-style: italic;
+      font-size: 1rem;
+      padding: .75rem 1.8rem;
+      border-radius: 999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: .6rem;
+      box-shadow: 0 6px 22px rgba(140, 65, 85, 0.35);
+      transition: all 0.35s ease;
+    }
+
+    .btn-sorpresa:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 8px 28px rgba(140, 65, 85, 0.5);
+      background: linear-gradient(135deg, #b88438, #a04b62);
+    }
+
+    .btn-sorpresa svg {
+      width: 18px;
+      height: 18px;
+      fill: #fff8ee;
+    }
+
+    /* Botón Volver */
+    .volver {
+      background: rgba(44, 27, 46, 0.05);
+      border: 1px solid rgba(44, 27, 46, 0.25);
+      color: #3d2440;
+      font-family: 'EB Garamond', serif;
+      font-style: italic;
+      font-size: .95rem;
+      letter-spacing: .06em;
+      padding: .5rem 1.5rem;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all .3s ease;
+      margin-top: .5rem;
+    }
+
+    .volver:hover {
+      color: #f4ead9;
+      border-color: #2c1b2e;
+      background: #2c1b2e;
+    }
+
+    /* Modal de Sorpresa */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(18, 10, 20, 0.85);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      padding: 1.5rem;
+    }
+
+    .modal-overlay.activo {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-contenido {
+      background: linear-gradient(160deg, #2c1b2e 0%, #1c1220 100%);
+      border: 1px solid var(--gold);
+      border-radius: 20px;
+      padding: clamp(1.8rem, 5vw, 2.8rem);
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(201, 161, 90, 0.25);
+      transform: scale(0.85);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.2rem;
+    }
+
+    .modal-overlay.activo .modal-contenido {
+      transform: scale(1);
+    }
+
+    .modal-icono {
+      font-size: 2.5rem;
+      animation: pulseHeart 1.5s infinite alternate;
+    }
+
+    @keyframes pulseHeart {
+      0% {
+        transform: scale(1);
+      }
+
+      100% {
+        transform: scale(1.15);
+      }
+    }
+
+    .modal-titulo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      color: var(--gold-light);
+    }
+
+    .modal-texto {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem;
+      line-height: 1.6;
+      color: var(--cream-dim);
+    }
+
+    .btn-cerrar-modal {
+      background: var(--gold);
+      color: var(--ink-deep);
+      border: none;
+      font-family: 'EB Garamond', serif;
+      font-weight: 600;
+      padding: .6rem 1.8rem;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: .5rem;
+    }
+
+    .btn-cerrar-modal:hover {
+      background: var(--gold-light);
+      transform: scale(1.05);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Partículas ambientales -->
+  <div id="embers"></div>
+
+
+  <!-- VISTA 1: INICIO -->
+  <section id="inicio" class="view">
+    <div class="portada">
+      <span class="eyebrow"><strong>Una carta para ti</strong></span>
+      <h1 class="titulo">Hay algo<br><em>que quiero decirte</em></h1>
+
+
+      <button class="sello" id="btnAbrir" aria-label="Abrir la carta">
+        <svg viewBox="0 0 24 24">
+          <path
+            d="M12 21s-6.7-4.3-9.2-8.1C1.1 10.4 1.6 7.2 4 5.6c2-1.3 4.5-.8 6 1 .6.7 1.4 1.7 2 2.5.6-.8 1.4-1.8 2-2.5 1.5-1.8 4-2.3 6-1 2.4 1.6 2.9 4.8 1.2 7.3C18.7 16.7 12 21 12 21z" />
+        </svg>
+      </button>
+      <span class="sello-texto"><strong>toca el sello para abrir</strong></span>
+    </div>
+  </section>
+
+  <!-- VISTA 2: PÁGINA DE CARTA MEJORADA -->
+  <section id="carta" class="view">
+    <div class="carta-card">
+
+      <!-- Filigranas doradas -->
+      <svg class="corner-flourish top-left" viewBox="0 0 100 100">
+        <path d="M10,10 L90,10 C50,10 10,50 10,90 Z" fill="none" stroke="currentColor" stroke-width="3" />
+        <circle cx="25" cy="25" r="6" fill="currentColor" />
+      </svg>
+      <svg class="corner-flourish top-right" viewBox="0 0 100 100">
+        <path d="M10,10 L90,10 C50,10 10,50 10,90 Z" fill="none" stroke="currentColor" stroke-width="3" />
+        <circle cx="25" cy="25" r="6" fill="currentColor" />
+      </svg>
+      <svg class="corner-flourish bottom-left" viewBox="0 0 100 100">
+        <path d="M10,10 L90,10 C50,10 10,50 10,90 Z" fill="none" stroke="currentColor" stroke-width="3" />
+        <circle cx="25" cy="25" r="6" fill="currentColor" />
+      </svg>
+      <svg class="corner-flourish bottom-right" viewBox="0 0 100 100">
+        <path d="M10,10 L90,10 C50,10 10,50 10,90 Z" fill="none" stroke="currentColor" stroke-width="3" />
+        <circle cx="25" cy="25" r="6" fill="currentColor" />
+      </svg>
+
+      <!-- Encabezado de la carta -->
+      <header class="pagina-encabezado">
+        <div class="heart-badge">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+          </svg>
+        </div>
+        <span class="eyebrow"><strong>Para ti</strong></span>
+        <h2 class="pagina-titulo">Te quiero</h2>
+
+        <div class="divisor-ornamental">
+          <div class="divisor-linea"></div>
+          <span class="divisor-diamante">◆</span>
+          <div class="divisor-linea"></div>
+        </div>
+      </header>
+
+      <!-- Cuerpo principal del mensaje -->
+      <div class="pagina-cuerpo">
+        <p><span class="drop-cap">Q</span>uiero que sepas que pienso en ti más de lo que imaginas. En cada momento
+          del dia siempre apareces tú y todo se vuelve un poco más <strong>tranquilo</strong>.</p>
+
+        <div class="cita-poetica">
+          "Me encanta cómo las cosas más comunes se transforman en recuerdos hermosos simplemente porque estás tú."
+        </div>
+
+        <p>Quiero agradecerte por estar siempre ahi para mi y por ser una persona tan especial en mi vida. Eres alguien
+          increible,
+          una mujer maravillosa que nunca se rinde a pesar todo lo que pasa. No dejes que nadie te diga que no puedes
+          lograr tus sueños, porque yo sé que puedes lograr lo que te propongas.
+        </p>
+      </div>
+
+      <!-- Sección interactiva de razones -->
+      <div class="razones-seccion">
+        <h3 class="razones-titulo">¿Sabes por qué te quiero mucho?</h3>
+
+        <div class="razones-grid">
+          <div class="razon-card">
+            <div class="razon-icon">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+              </svg>
+            </div>
+            <span class="razon-texto">Por la forma en que alegras mi día con solo un mensaje tuyo.</span>
+          </div>
+
+          <div class="razon-card">
+            <div class="razon-icon">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+              </svg>
+            </div>
+            <span class="razon-texto">Por estar siempre para mi en cada momento y escucharme siempre. </span>
+          </div>
+
+          <div class="razon-card">
+            <div class="razon-icon">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+              </svg>
+            </div>
+            <span class="razon-texto">Por tu forma de ser tan única y especial.</span>
+          </div>
+
+          <div class="razon-card">
+            <div class="razon-icon">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+              </svg>
+            </div>
+            <span class="razon-texto">Por estar presente y hacerme sonreír aun a la distancia.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="divisor-ornamental">
+        <div class="divisor-linea"></div>
+        <span class="divisor-diamante">◆</span>
+        <div class="divisor-linea"></div>
+      </div>
+
+      <!-- Pie de carta con firma y botón de sorpresa -->
+      <footer class="carta-footer">
+        <p class="firma">Para ti con todo mi cariño Liz ❤️✨</p>
+
+        <button class="btn-sorpresa" id="btnSorpresa">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+          </svg>
+          Ver nota secreta...
+        </button>
+
+        <button class="volver" id="btnVolver">← volver al inicio</button>
+      </footer>
+
+    </div>
+  </section>
+
+  <!-- Modal Sorpresa -->
+  <div class="modal-overlay" id="modalSorpresa">
+    <div class="modal-contenido">
+      <div class="modal-icono">💖</div>
+      <h3 class="modal-titulo">Para cuando lo necesites</h3>
+      <p class="modal-texto">No sé qué nos deparará el futuro, pero de algo estoy completamente seguro: pase lo que
+        pase, siempre encontraré la manera de hacerte saber que eres importante para mí. En los días buenos y en los
+        malos, en la distancia o muy cerca, quiero que sepas que hay un lugar en mi corazón que es solo tuyo.</p>
+      <button class="btn-cerrar-modal" id="btnCerrarModal">Lo guardo conmigo</button>
+    </div>
+  </div>
+
+  <script>
+    const body = document.body;
+    const btnAbrir = document.getElementById('btnAbrir');
+    const btnVolver = document.getElementById('btnVolver');
+    const btnSorpresa = document.getElementById('btnSorpresa');
+    const modalSorpresa = document.getElementById('modalSorpresa');
+    const btnCerrarModal = document.getElementById('btnCerrarModal');
+
+    // Transición entre vistas
+    btnAbrir.addEventListener('click', () => {
+      body.classList.add('abierto');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    btnVolver.addEventListener('click', () => {
+      body.classList.remove('abierto');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Modal Sorpresa
+    btnSorpresa.addEventListener('click', () => {
+      modalSorpresa.classList.add('activo');
+      crearRáfagaCorazones();
+    });
+
+    btnCerrarModal.addEventListener('click', () => {
+      modalSorpresa.classList.remove('activo');
+    });
+
+    modalSorpresa.addEventListener('click', (e) => {
+      if (e.target === modalSorpresa) {
+        modalSorpresa.classList.remove('activo');
+      }
+    });
+
+    // Partículas ambientales (Embers)
+    const container = document.getElementById('embers');
+    const total = window.innerWidth < 600 ? 16 : 28;
+    for (let i = 0; i < total; i++) {
+      const e = document.createElement('div');
+      e.className = 'ember';
+      const size = Math.random() * 3 + 1.5;
+      e.style.width = size + 'px';
+      e.style.height = size + 'px';
+      e.style.left = Math.random() * 100 + 'vw';
+      e.style.bottom = (Math.random() * 20 - 10) + 'vh';
+      e.style.animationDuration = (Math.random() * 10 + 12) + 's';
+      e.style.animationDelay = (Math.random() * 12) + 's';
+      container.appendChild(e);
+    }
+
+    // Partículas al hacer clic (Corazones flotantes)
+    const cartaSection = document.getElementById('carta');
+    cartaSection.addEventListener('click', (e) => {
+      // Si hizo clic en un botón o modal, no lanzar corazones genéricos
+      if (e.target.closest('button') || e.target.closest('.modal-contenido')) return;
+
+      const heart = document.createElement('div');
+      heart.className = 'click-heart';
+      const iconos = ['🌸', '✨', '💖', '💕', '⭐'];
+      heart.textContent = iconos[Math.floor(Math.random() * iconos.length)];
+      heart.style.left = e.clientX + 'px';
+      heart.style.top = e.clientY + 'px';
+      document.body.appendChild(heart);
+
+      setTimeout(() => heart.remove(), 1200);
+    });
+
+    // Ráfaga de corazones para la sorpresa
+    function crearRáfagaCorazones() {
+      const iconos = ['💖', '💕', '✨', '🌸', '❤️'];
+      for (let i = 0; i < 20; i++) {
+        setTimeout(() => {
+          const heart = document.createElement('div');
+          heart.className = 'click-heart';
+          heart.textContent = iconos[Math.floor(Math.random() * iconos.length)];
+          heart.style.left = (window.innerWidth / 2 + (Math.random() * 200 - 100)) + 'px';
+          heart.style.top = (window.innerHeight / 2 + (Math.random() * 100 - 50)) + 'px';
+          document.body.appendChild(heart);
+
+          setTimeout(() => heart.remove(), 1200);
+        }, i * 60);
+      }
+    }
+
+    // Sintetizador Web Audio para música de fondo suave (Caja de Música / Melodía Romántica)
+    let audioCtx = null;
+    let isPlayingAudio = false;
+    let audioTimer = null;
+    const btnAudio = document.getElementById('btnAudio');
+    const iconOff = document.getElementById('iconAudioOff');
+    const iconOn = document.getElementById('iconAudioOn');
+
+    const notas = [261.63, 329.63, 392.00, 493.88, 523.25, 659.25, 783.99]; // Do, Mi, Sol, Si, Do, Mi, Sol
+
+    function playTone(freq, duration = 1.2) {
+      if (!audioCtx || audioCtx.state === 'suspended') return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (err) { }
+    }
+
+    function toggleAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+
+      isPlayingAudio = !isPlayingAudio;
+
+      if (isPlayingAudio) {
+        iconOff.style.display = 'none';
+        iconOn.style.display = 'block';
+        let step = 0;
+        audioTimer = setInterval(() => {
+          const note = notas[step % notas.length];
+          playTone(note, 1.8);
+          if (Math.random() > 0.4) {
+            setTimeout(() => playTone(notas[(step + 2) % notas.length], 1.5), 300);
+          }
+          step++;
+        }, 900);
+      } else {
+        iconOff.style.display = 'block';
+        iconOn.style.display = 'none';
+        clearInterval(audioTimer);
+      }
+    }
+
+    btnAudio.addEventListener('click', toggleAudio);
+  </script>
+</body>
+
+</html>
